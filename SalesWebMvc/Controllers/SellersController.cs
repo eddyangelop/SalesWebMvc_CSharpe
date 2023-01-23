@@ -1,9 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System;
+using Microsoft.AspNetCore.Mvc;
 using SalesWebMvc.Models;
 using SalesWebMvc.Models.ViewModels;
 using SalesWebMvc.Services;
 using SalesWebMvc.Services.Exceptions;
-using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -88,7 +88,7 @@ namespace SalesWebMvc.Controllers
             }
 
             var obj = await _sellerService.FindByIdAsync(id.Value);
-            if (id == null)
+            if (obj == null)
             {
                 return RedirectToAction(nameof(Error), new { message = "Id not found" });
             }
@@ -137,7 +137,6 @@ namespace SalesWebMvc.Controllers
             {
                 return RedirectToAction(nameof(Error), new { message = e.Message });
             }
-
         }
 
         public IActionResult Error(string message)
@@ -149,6 +148,5 @@ namespace SalesWebMvc.Controllers
             };
             return View(viewModel);
         }
-
     }
 }
