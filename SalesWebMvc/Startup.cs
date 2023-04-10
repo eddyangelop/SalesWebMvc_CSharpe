@@ -40,8 +40,14 @@ namespace SalesWebMvc
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
+            //UseMySql !
+            //services.AddDbContext<SalesWebMvcContext>(options =>
+            
+                    //options.UseMySql(Configuration.GetConnectionString("SalesWebMvcContext"), builder =>
+                        //builder.MigrationsAssembly("SalesWebMvc")));
+            // or UseSqlServer !
             services.AddDbContext<SalesWebMvcContext>(options =>
-            // or UseMySql
+           
                     options.UseSqlServer(Configuration.GetConnectionString("SalesWebMvcContext"), builder =>
                         builder.MigrationsAssembly("SalesWebMvc")));
 
