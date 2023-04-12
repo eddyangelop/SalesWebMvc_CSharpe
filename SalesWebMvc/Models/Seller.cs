@@ -1,12 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 
 namespace SalesWebMvc.Models
 {
     public class Seller
     {
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
 
         [Required(ErrorMessage = "{0} required")]
@@ -38,6 +41,15 @@ namespace SalesWebMvc.Models
 
         public Seller()
         {
+        }
+
+        public Seller(string name, string email, DateTime birthDate, double baseSalary, Department department)
+        {
+            Name = name;
+            Email = email;
+            BirthDate = birthDate;
+            BaseSalary = baseSalary;
+            Department = department;
         }
 
         public Seller(int id, string name, string email, DateTime birthDate, double baseSalary, Department department)

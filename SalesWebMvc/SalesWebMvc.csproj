@@ -5,6 +5,15 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Migrations\20230411160707_MigrationSqlServer.cs" />
+    <Compile Remove="Migrations\20230411160707_MigrationSqlServer.Designer.cs" />
+    <Compile Remove="Migrations\20230411162044_MigrationSqlServer.cs" />
+    <Compile Remove="Migrations\20230411162044_MigrationSqlServer.Designer.cs" />
+    <Compile Remove="Migrations\20230411163537_MigrationSqlServer.cs" />
+    <Compile Remove="Migrations\20230411163537_MigrationSqlServer.Designer.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore" Version="2.1.7" />
     <PackageReference Include="Microsoft.AspNetCore.App" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.1.3" />
