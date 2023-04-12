@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -10,6 +11,8 @@ namespace SalesWebMvc.Models
 {
     public class SalesRecord
     {
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
 
         [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}")]
@@ -22,6 +25,14 @@ namespace SalesWebMvc.Models
 
         public SalesRecord()
         {
+        }
+
+        public SalesRecord(DateTime date, double amount, SaleStatus status, Seller seller)
+        {
+            Date = date;
+            Amount = amount;
+            Status = status;
+            Seller = seller;
         }
 
         public SalesRecord(int id, DateTime date, double amount, SaleStatus status, Seller seller)
