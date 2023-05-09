@@ -8,24 +8,32 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Configuration;
+using SalesWebMvc.Interfaces;
 
 namespace SalesWebMvc.Controllers
 {
     public class SellersController : Controller
     {
         private readonly SellerService _sellerService;
+        private readonly ISellerService _ISellerService;
         private readonly DepartmentService _departmentService;
+        
 
-        public SellersController(SellerService sellerService, DepartmentService departmentService)
+        public SellersController(SellerService sellerService, ISellerService IsellerService, DepartmentService departmentService)
         {
             _sellerService = sellerService;
+            _ISellerService = IsellerService;
             _departmentService = departmentService;
+            
         }
 
-        public async Task<IActionResult> Index()
+
+        // GET: Sellers
+        public IActionResult Index()
         {
-            var list = await _sellerService.FindAllAsync();
-            return View(list);
+            var result = _ISellerService.GetSellers();
+            return View(result);
         }
 
         public async Task<IActionResult> Create()
