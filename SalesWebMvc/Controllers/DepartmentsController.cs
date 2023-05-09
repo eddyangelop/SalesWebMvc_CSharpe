@@ -1,27 +1,36 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using SalesWebMvc.Interfaces;
 using SalesWebMvc.Models;
+using SalesWebMvc.Services;
 
 namespace SalesWebMvc.Controllers
 {
     public class DepartmentsController : Controller
     {
-        private readonly SalesWebMvcContext _context;
 
-        public DepartmentsController(SalesWebMvcContext context)
+        private readonly SalesWebMvcContext _context;
+        private readonly IDepartmentService _deparmentService;
+
+        public DepartmentsController(SalesWebMvcContext context, IDepartmentService deparmentService)
         {
             _context = context;
+            _deparmentService = deparmentService;
         }
 
         // GET: Departments
-        public async Task<IActionResult> Index()
+        public IActionResult Index()
         {
-            return View(await _context.Department.ToListAsync());
+           var result = _deparmentService.GetDepartments();
+
+            return View(result);
         }
 
         // GET: Departments/Details/5
@@ -42,6 +51,8 @@ namespace SalesWebMvc.Controllers
             return View(department);
         }
 
+
+
         // GET: Departments/Create
         public IActionResult Create()
         {
@@ -57,12 +68,17 @@ namespace SalesWebMvc.Controllers
         {
             if (ModelState.IsValid)
             {
-                _context.Add(department);
-                await _context.SaveChangesAsync();
+                var result = _deparmentService.CreateDepartment(department);
+
+                var mensagem = "ADICIONADO DEPARTAMENTO " + department.Name;
+                TempData["Mensagem"] = mensagem;
+
                 return RedirectToAction(nameof(Index));
             }
             return View(department);
         }
+
+
 
         // GET: Departments/Edit/5
         public async Task<IActionResult> Edit(int? id)
@@ -114,6 +130,8 @@ namespace SalesWebMvc.Controllers
             }
             return View(department);
         }
+
+
 
         // GET: Departments/Delete/5
         public async Task<IActionResult> Delete(int? id)

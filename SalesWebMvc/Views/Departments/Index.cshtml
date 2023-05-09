@@ -5,7 +5,13 @@
 }
 
 <h2>Index</h2>
-
+@if (TempData.ContainsKey("Mensagem"))
+{
+    <script>
+        var mensagem = '@TempData["Mensagem"]';
+        alert(mensagem);
+    </script>
+}
 <p>
     <a asp-action="Create">Create New</a>
 </p>
