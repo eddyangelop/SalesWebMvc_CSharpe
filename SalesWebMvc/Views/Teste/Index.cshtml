@@ -1,0 +1,18 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+    <h1>Seu nome é</h1>
+    <h2>@TempData["Nome"]</h2>
+
+    <h1>@TempData["MensagemBoasVindas"]</h1>
+
+    if(@TempData["MensagemBoasVindas"] == "Bem vindo a pagina de teste")
+    {
+        <h1>Voce está na pagina correta</h1>
+    }
+    else
+    {
+        <h1>Saia imediatamente daqui</h1>
+    }
+}

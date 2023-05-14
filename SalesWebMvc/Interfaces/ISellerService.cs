@@ -8,5 +8,7 @@ namespace SalesWebMvc.Interfaces
         List<Seller> GetSellers();
 
         int CreateSeller(Seller seller);
+
+
     }
 }
