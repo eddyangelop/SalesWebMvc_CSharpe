@@ -68,7 +68,27 @@ namespace SalesWebMvc.Services
 
         public int CreateSeller(Seller seller)
         {
-            throw new System.NotImplementedException();
+            var query = "Insert into tb_Seller (Name) Values (@Name)";
+            var stringConnection = _configuration["AdoSqlConn"];
+            query += "SELECT SCOPE_IDENTITY()";
+
+            using (SqlConnection con = new SqlConnection(stringConnection)) 
+            {
+
+                using (SqlCommand cmd = new SqlCommand(query)) 
+                {
+
+                    cmd.Parameters.AddWithValue("@Name", seller.Name);
+                    cmd.Connection = con;
+                    con.Open();
+                    seller.Id = Convert.ToInt32(cmd.ExecuteScalar());
+
+                    con.Close();
+                
+                }
+                return seller.Id;
+
+            }
         }
 
     }

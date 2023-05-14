@@ -25,6 +25,7 @@ namespace SalesWebMvc.Controllers
             _deparmentService = deparmentService;
         }
 
+
         // GET: Departments
         public IActionResult Index()
         {
@@ -32,7 +33,7 @@ namespace SalesWebMvc.Controllers
 
             return View(result);
         }
-
+  
         // GET: Departments/Details/5
         public async Task<IActionResult> Details(int? id)
         {

@@ -10,6 +10,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using SalesWebMvc.Interfaces;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace SalesWebMvc.Controllers
 {
@@ -18,14 +19,15 @@ namespace SalesWebMvc.Controllers
         private readonly SellerService _sellerService;
         private readonly ISellerService _ISellerService;
         private readonly DepartmentService _departmentService;
-        
+        private readonly IDepartmentService _departmentServiceAdo;
 
-        public SellersController(SellerService sellerService, ISellerService IsellerService, DepartmentService departmentService)
+        public SellersController(SellerService sellerService, ISellerService IsellerService, DepartmentService departmentService, IDepartmentService departmentServiceAdo)
         {
             _sellerService = sellerService;
             _ISellerService = IsellerService;
             _departmentService = departmentService;
-            
+            _departmentServiceAdo = departmentServiceAdo;
+
         }
 
 
@@ -36,74 +38,54 @@ namespace SalesWebMvc.Controllers
             return View(result);
         }
 
-        public async Task<IActionResult> Create()
+
+
+        // GET: Sellers/Create
+        public IActionResult Create()
         {
-            var departments = await _departmentService.FindAllAsync();
+            // lembra que eu te disse, que tu precisa passar algo dentro do construtor da classe ? não ta chegando nada lá 
+            /* isso aqui antes era assim
+              var departments = await _departmentService.FindAllAsync(); aqui é uma lista de departamentos, que vai entrar aqui dentro
             var ViewModel = new SellerFormViewModel { Departments = departments };
-            return View(ViewModel);
+             */
+            // agora deu outro erro, porque a lista ta vazia
+            // isso daqui tu vai substituir pelo nosso getDepartments()
+            //var departments = new List<Department>() { new Department() { Id = 1, Name = "teste" } };
+
+            // nesse caso ele esperava um objeto do tipo SellerFormViewModel que dentro tem uma lista de departments
+
+            // 2. tu sempre tem que se atentar qual é o tipo de objeto que ta esperando lá na classe
+            //var ViewModel = new SellerFormViewModel { Departments = departments };
+
+            // posso mandar vazia, pois existe um construtor vazio
+            // se eu coloco apenas uma virgula repara que aparece todas as opções se eu apertar nas setinhas ou pra cima
+            // ai entendendo isso, perceba que tua view foi informada que ela precisa receber uma classe
+            // mas como eu mudei lá agora eu poderia passar um department se eu quiser, entendeu ? mais ou menos
+            var viewModel = new SellerFormViewModel { Departments = _departmentServiceAdo.GetDepartments() };
+
+            return View(viewModel);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(Seller seller)
+        public async Task<IActionResult> Create([Bind("Id, Name")] Seller seller)
         {
             if (!ModelState.IsValid)
             {
-                var departments = await _departmentService.FindAllAsync();
-                var viewModel = new SellerFormViewModel { Seller = seller, Departments = departments };
-                return View(viewModel);
-            }
-            await _sellerService.InsertAsync(seller);
-            return RedirectToAction(nameof(Index));
-        }
+                var result = _ISellerService.CreateSeller(seller);
+                var mensagem = "ADICIONADO VENDEDOR" + seller.Name;
+                TempData["Mensagem"] = mensagem;
 
-        public async Task<IActionResult> Delete(int? id)
-        {
-            if (id == null)
-            {
-                return RedirectToAction(nameof(Error), new { message = "Id not provided" });
-            }
-
-            var obj = await _sellerService.FindByIdAsync(id.Value);
-            if (id == null)
-            {
-                return RedirectToAction(nameof(Error), new { message = "Id not found" });
-            }
-
-            return View(obj);
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Delete(int id)
-        {
-            try
-            {
-                await _sellerService.RemoveAsync(id);
                 return RedirectToAction(nameof(Index));
+                
             }
-            catch (IntegrityException e)
-            {
-                return RedirectToAction(nameof(Error), new { message = e.Message });
-            }
+            return View(seller);
+
         }
 
-        public async Task<IActionResult> Details(int? id)
-        {
-            if (id == null)
-            {
-                return RedirectToAction(nameof(Error), new { message = "Id not provided" });
-            }
 
-            var obj = await _sellerService.FindByIdAsync(id.Value);
-            if (obj == null)
-            {
-                return RedirectToAction(nameof(Error), new { message = "Id not found" });
-            }
 
-            return View(obj);
-        }
-
+        // GET: Sellers/Edit
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -145,6 +127,59 @@ namespace SalesWebMvc.Controllers
             {
                 return RedirectToAction(nameof(Error), new { message = e.Message });
             }
+        }
+
+
+
+        // GET: Sellers/Delete
+        public async Task<IActionResult> Delete(int? id)
+        {
+            if (id == null)
+            {
+                return RedirectToAction(nameof(Error), new { message = "Id not provided" });
+            }
+
+            var obj = await _sellerService.FindByIdAsync(id.Value);
+            if (id == null)
+            {
+                return RedirectToAction(nameof(Error), new { message = "Id not found" });
+            }
+
+            return View(obj);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Delete(int id)
+        {
+            try
+            {
+                await _sellerService.RemoveAsync(id);
+                return RedirectToAction(nameof(Index));
+            }
+            catch (IntegrityException e)
+            {
+                return RedirectToAction(nameof(Error), new { message = e.Message });
+            }
+        }
+
+   
+
+        // GET: Sellers/Details/5
+        public async Task<IActionResult> Details(int? id)
+        {
+            if (id == null)
+            {
+                return RedirectToAction(nameof(Error), new { message = "Id not provided" });
+            }
+
+            var obj = await _sellerService.FindByIdAsync(id.Value);
+            if (obj == null)
+            {
+                return RedirectToAction(nameof(Error), new { message = "Id not found" });
+            }
+
+            return View(obj);
         }
 
         public IActionResult Error(string message)
