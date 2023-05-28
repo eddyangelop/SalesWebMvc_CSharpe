@@ -7,7 +7,7 @@ namespace SalesWebMvc.Controllers
     {
         public TesteController()
         {
-            
+
         }
 
         public IActionResult Index()
@@ -15,7 +15,7 @@ namespace SalesWebMvc.Controllers
             string nome = SeuNome("Eddy", "Angelo");
 
             TempData["Nome"] = nome;
-            TempData["MensagemBoasVindas"] = "Bem vindo a pagina de testee";
+            TempData["MensagemBoasVindas"] = "Bem vindo a pagina de teste";
 
 
             return View();
