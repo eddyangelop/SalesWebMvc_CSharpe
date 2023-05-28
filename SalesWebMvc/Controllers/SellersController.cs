@@ -68,11 +68,12 @@ namespace SalesWebMvc.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id, Name")] Seller seller)
+        public async Task<IActionResult> Create([Bind("Id, Name, Email, BirthDate, BaseSalary")] Seller seller)
         {
             if (!ModelState.IsValid)
             {
-                var result = _ISellerService.CreateSeller(seller);
+                var result =  _ISellerService.CreateSeller(seller);
+
                 var mensagem = "ADICIONADO VENDEDOR" + seller.Name;
                 TempData["Mensagem"] = mensagem;
 

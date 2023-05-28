@@ -27,7 +27,7 @@ namespace SalesWebMvc.Services
             List<Seller> sellerList = new List<Seller>();
 
             var stringConnection = _configuration["AdoSqlConn"];
-            var query = "SELECT Id, Name, Email, BirthDate, BaseSalary  FROM tb_Seller";
+            var query = "SELECT Id, Name, Email, BirthDate, BaseSalary FROM tb_Seller";
 
             using (SqlConnection conn = new SqlConnection(stringConnection))
             {
